@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Booking - SkyWings Airlines{% endblock %}
+
+{% block content %}
+<div class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card fade-in">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0"><i class="bi bi-person-plus"></i> Passenger Details</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" name="passenger_name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" name="passenger_email" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" name="passenger_phone" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Seat Number</label>
+                                    <input type="text" class="form-control" value="{{ request.args.get('seat', '') }}" readonly>
+                                    <input type="hidden" name="seat_number" value="{{ request.args.get('seat', '') }}">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Seat Class</label>
+                                <input type="text" class="form-control" value="{{ request.args.get('seat_class', 'economy')|upper }}" readonly>
+                                <input type="hidden" name="seat_class" value="{{ request.args.get('seat_class', 'economy') }}">
+                            </div>
+                            <hr>
+                            <h5 class="mb-3">Payment Details</h5>
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i> This is a demo. No actual payment will be processed.
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Card Number</label>
+                                    <input type="text" class="form-control" placeholder="1234 5678 9012 3456">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Expiry</label>
+                                    <input type="text" class="form-control" placeholder="MM/YY">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">CVV</label>
+                                    <input type="text" class="form-control" placeholder="123">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-accent btn-lg w-100">
+                                <i class="bi bi-check-circle"></i> Confirm Booking
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card fade-in">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Booking Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6>{{ flight.airline }}</h6>
+                        <p class="text-muted">{{ flight.flight_number }}</p>
+                        <hr>
+                        <p><strong>Route:</strong> {{ flight.origin }} → {{ flight.destination }}</p>
+                        <p><strong>Departure:</strong> {{ flight.departure_time }}</p>
+                        <p><strong>Arrival:</strong> {{ flight.arrival_time }}</p>
+                        <hr>
+                        <p><strong>Seat:</strong> {{ request.args.get('seat', 'Not selected') }}</p>
+                        <p><strong>Class:</strong> {{ request.args.get('seat_class', 'economy')|upper }}</p>
+                        <hr>
+                        {% if request.args.get('seat_class') == 'business' %}
+                        <p class="text-end h4">${{ flight.price_business }}</p>
+                        {% elif request.args.get('seat_class') == 'first' %}
+                        <p class="text-end h4">${{ flight.price_first }}</p>
+                        {% else %}
+                        <p class="text-end h4">${{ flight.price_economy }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

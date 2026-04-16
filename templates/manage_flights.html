@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Flights - SkyWings Airlines{% endblock %}
+
+{% block content %}
+<div class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-airplane"></i> Manage Flights</h2>
+            <div>
+                <a href="/admin" class="btn btn-outline-primary">Dashboard</a>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFlightModal">
+                    <i class="bi bi-plus-circle"></i> Add Flight
+                </button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Flight No</th>
+                                <th>Airline</th>
+                                <th>Route</th>
+                                <th>Time</th>
+                                <th>Economy</th>
+                                <th>Business</th>
+                                <th>First</th>
+                                <th>Available</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for flight in flights %}
+                            <tr>
+                                <td>{{ flight.flight_number }}</td>
+                                <td>{{ flight.airline }}</td>
+                                <td>{{ flight.origin }} → {{ flight.destination }}</td>
+                                <td>{{ flight.departure_time }} - {{ flight.arrival_time }}</td>
+                                <td>${{ flight.price_economy }}</td>
+                                <td>${{ flight.price_business }}</td>
+                                <td>${{ flight.price_first }}</td>
+                                <td>{{ flight.available_seats }}/{{ flight.total_seats }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if flight.status == 'active' else 'danger' }}">
+                                        {{ flight.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editFlightModal{{ flight.id }}">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <a href="/admin/flights/{{ flight.id }}/delete" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            
+                            <!-- Edit Modal -->
+                            <div class="modal fade" id="editFlightModal{{ flight.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Edit Flight {{ flight.flight_number }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <form method="POST" action="/admin/flights/{{ flight.id }}/edit">
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Flight Number</label>
+                                                    <input type="text" class="form-control" name="flight_number" value="{{ flight.flight_number }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Airline</label>
+                                                    <select class="form-select" name="airline">
+                                                        {% for airline in airlines %}
+                                                        <option value="{{ airline }}" {{ 'selected' if flight.airline == airline else '' }}>{{ airline }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Origin</label>
+                                                        <select class="form-select" name="origin">
+                                                            {% for city in cities %}
+                                                            <option value="{{ city }}" {{ 'selected' if flight.origin == city else '' }}>{{ city }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Destination</label>
+                                                        <select class="form-select" name="destination">
+                                                            {% for city in cities %}
+                                                            <option value="{{ city }}" {{ 'selected' if flight.destination == city else '' }}>{{ city }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Departure Time</label>
+                                                        <input type="text" class="form-control" name="departure_time" value="{{ flight.departure_time }}" required>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Arrival Time</label>
+                                                        <input type="text" class="form-control" name="arrival_time" value="{{ flight.arrival_time }}" required>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4 mb-3">
+                                                        <label class="form-label">Economy Price</label>
+                                                        <input type="number" class="form-control" name="price_economy" value="{{ flight.price_economy }}" required>
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label class="form-label">Business Price</label>
+                                                        <input type="number" class="form-control" name="price_business" value="{{ flight.price_business }}" required>
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label class="form-label">First Class Price</label>
+                                                        <input type="number" class="form-control" name="price_first" value="{{ flight.price_first }}" required>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Status</label>
+                                                    <select class="form-select" name="status">
+                                                        <option value="active" {{ 'selected' if flight.status == 'active' else '' }}>Active</option>
+                                                        <option value="cancelled" {{ 'selected' if flight.status == 'cancelled' else '' }}>Cancelled</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Flight Modal -->
+<div class="modal fade" id="addFlightModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Flight</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="/admin/flights/add">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Flight Number</label>
+                        <input type="text" class="form-control" name="flight_number" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Airline</label>
+                        <select class="form-select" name="airline">
+                            {% for airline in airlines %}
+                            <option value="{{ airline }}">{{ airline }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Origin</label>
+                            <select class="form-select" name="origin">
+                                {% for city in cities %}
+                                <option value="{{ city }}">{{ city }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Destination</label>
+                            <select class="form-select" name="destination">
+                                {% for city in cities %}
+                                <option value="{{ city }}">{{ city }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Departure Time</label>
+                            <input type="text" class="form-control" name="departure_time" placeholder="e.g., 08:00" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Arrival Time</label>
+                            <input type="text" class="form-control" name="arrival_time" placeholder="e.g., 20:00" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Economy Price</label>
+                            <input type="number" class="form-control" name="price_economy" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Business Price</label>
+                            <input type="number" class="form-control" name="price_business" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">First Class Price</label>
+                            <input type="number" class="form-control" name="price_first" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Total Seats</label>
+                        <input type="number" class="form-control" name="total_seats" value="180" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Flight</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

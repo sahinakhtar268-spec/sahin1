@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Passengers - SkyWings Airlines{% endblock %}
+
+{% block content %}
+<div class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-people"></i> Passenger List</h2>
+            <a href="/admin" class="btn btn-outline-primary">Dashboard</a>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>PNR</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Flight</th>
+                                <th>Route</th>
+                                <th>Seat</th>
+                                <th>Class</th>
+                                <th>Status</th>
+                                <th>Booked On</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in bookings %}
+                            <tr>
+                                <td><strong>{{ booking.pnr }}</strong></td>
+                                <td>{{ booking.passenger_name }}</td>
+                                <td>{{ booking.passenger_email }}</td>
+                                <td>{{ booking.passenger_phone }}</td>
+                                <td>{{ booking.flight.flight_number }}</td>
+                                <td>{{ booking.flight.origin }} → {{ booking.flight.destination }}</td>
+                                <td>{{ booking.seat_number }}</td>
+                                <td>{{ booking.seat_class|upper }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if booking.booking_status == 'confirmed' else 'danger' }}">
+                                        {{ booking.booking_status }}
+                                    </span>
+                                </td>
+                                <td>{{ booking.created_at.strftime('%Y-%m-%d') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

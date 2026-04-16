@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Ticket - SkyWings Airlines{% endblock %}
+
+{% block content %}
+<div class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card fade-in">
+                    <div class="card-header bg-success text-white text-center">
+                        <h3 class="mb-0"><i class="bi bi-check-circle-fill"></i> Booking Confirmed!</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <h4 class="text-muted">Your PNR is</h4>
+                            <h2 class="text-primary fw-bold">{{ booking.pnr }}</h2>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Flight Details</h5>
+                                        <p class="mb-1"><strong>Airline:</strong> {{ booking.flight.airline }}</p>
+                                        <p class="mb-1"><strong>Flight No:</strong> {{ booking.flight.flight_number }}</p>
+                                        <p class="mb-1"><strong>From:</strong> {{ booking.flight.origin }}</p>
+                                        <p class="mb-1"><strong>To:</strong> {{ booking.flight.destination }}</p>
+                                        <p class="mb-1"><strong>Departure:</strong> {{ booking.flight.departure_time }}</p>
+                                        <p class="mb-0"><strong>Arrival:</strong> {{ booking.flight.arrival_time }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Passenger Details</h5>
+                                        <p class="mb-1"><strong>Name:</strong> {{ booking.passenger_name }}</p>
+                                        <p class="mb-1"><strong>Email:</strong> {{ booking.passenger_email }}</p>
+                                        <p class="mb-1"><strong>Phone:</strong> {{ booking.passenger_phone }}</p>
+                                        <p class="mb-1"><strong>Seat:</strong> {{ booking.seat_number }}</p>
+                                        <p class="mb-0"><strong>Class:</strong> {{ booking.seat_class|upper }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="d-inline-block p-4 border rounded">
+                                <p class="mb-1 text-muted">Total Paid</p>
+                                <h2 class="text-success mb-0">${{ booking.price }}</h2>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <a href="/ticket/{{ booking.pnr }}/pdf" class="btn btn-primary">
+                                <i class="bi bi-download"></i> Download PDF Ticket
+                            </a>
+                            <a href="/" class="btn btn-outline-secondary">
+                                <i class="bi bi-house"></i> Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

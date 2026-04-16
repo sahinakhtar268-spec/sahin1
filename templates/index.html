@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}SkyWings Airlines - Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-white fade-in">
+                <h1 class="display-3 fw-bold mb-4">Fly to Your Dream Destination</h1>
+                <p class="lead mb-4">Experience world-class service and comfort with SkyWings Airlines. Book your next adventure today!</p>
+                <a href="/search" class="btn btn-accent btn-lg me-2">
+                    <i class="bi bi-search"></i> Search Flights
+                </a>
+            </div>
+            <div class="col-lg-6 fade-in">
+                <div class="card p-4">
+                    <h3 class="mb-4 text-center">Quick Flight Search</h3>
+                    <form action="/api/flights" method="POST">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">From</label>
+                                <select class="form-select" name="origin" required>
+                                    <option value="">Select Origin</option>
+                                    {% for city in cities %}
+                                    <option value="{{ city }}">{{ city }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">To</label>
+                                <select class="form-select" name="destination" required>
+                                    <option value="">Select Destination</option>
+                                    {% for city in cities %}
+                                    <option value="{{ city }}">{{ city }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Travel Date</label>
+                                <input type="date" class="form-control" name="date" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Passengers</label>
+                                <select class="form-select" name="passengers">
+                                    <option value="1">1 Passenger</option>
+                                    <option value="2">2 Passengers</option>
+                                    <option value="3">3 Passengers</option>
+                                    <option value="4">4 Passengers</option>
+                                    <option value="5">5 Passengers</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-search"></i> Search Flights
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Why Choose SkyWings?</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="feature-icon bg-primary text-white mx-auto">
+                        <i class="bi bi-airplane"></i>
+                    </div>
+                    <h4>Multiple Airlines</h4>
+                    <p class="text-muted">Access flights from 6 major airlines with competitive prices and various routes worldwide.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="feature-icon bg-success text-white mx-auto">
+                        <i class="bi bi-person-check"></i>
+                    </div>
+                    <h4>Easy Booking</h4>
+                    <p class="text-muted">Simple and intuitive booking process with seat selection and instant confirmation.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="feature-icon bg-warning text-white mx-auto">
+                        <i class="bi bi-file-pdf"></i>
+                    </div>
+                    <h4>PDF Tickets</h4>
+                    <p class="text-muted">Receive your tickets instantly via email with downloadable PDF format.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h2 class="display-4 fw-bold">50+</h2>
+                    <p class="mb-0">Destinations</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h2 class="display-4 fw-bold">1000+</h2>
+                    <p class="mb-0">Daily Flights</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h2 class="display-4 fw-bold">1M+</h2>
+                    <p class="mb-0">Happy Customers</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h2 class="display-4 fw-bold">24/7</h2>
+                    <p class="mb-0">Support</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Popular Routes -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Popular Routes</h2>
+        <div class="row g-4">
+            {% for airline in airlines[:3] %}
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ airline }}</h5>
+                        <p class="card-text text-muted">Popular routes to major cities worldwide</p>
+                        <a href="/search" class="btn btn-outline-primary">Explore Routes</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+    // Set minimum date to today
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+    const today = new Date().toISOString().split('T')[0];
+    dateInputs.forEach(input => {
+        input.setAttribute('min', today);
+    });
+</script>
+{% endblock %}
+

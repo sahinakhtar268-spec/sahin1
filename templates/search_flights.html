@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Search Flights - SkyWings Airlines{% endblock %}
+
+{% block content %}
+<div class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card fade-in">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0"><i class="bi bi-search"></i> Search Flights</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/api/flights" method="POST" id="searchForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">From</label>
+                                    <select class="form-select" name="origin" required>
+                                        <option value="">Select Origin City</option>
+                                        {% for city in cities %}
+                                        <option value="{{ city }}">{{ city }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">To</label>
+                                    <select class="form-select" name="destination" required>
+                                        <option value="">Select Destination City</option>
+                                        {% for city in cities %}
+                                        <option value="{{ city }}">{{ city }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Travel Date</label>
+                                    <input type="date" class="form-control" name="date" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Passengers</label>
+                                    <select class="form-select" name="passengers">
+                                        <option value="1">1 Passenger</option>
+                                        <option value="2">2 Passengers</option>
+                                        <option value="3">3 Passengers</option>
+                                        <option value="4">4 Passengers</option>
+                                        <option value="5">5 Passengers</option>
+                                        <option value="6">6 Passengers</option>
+                                        <option value="7">7 Passengers</option>
+                                        <option value="8">8 Passengers</option>
+                                        <option value="9">9 Passengers</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-search"></i> Search Flights
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set minimum date to today
+    const dateInput = document.querySelector('input[type="date"]');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', today);
+    
+    // Validate origin and destination are different
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+        const origin = document.querySelector('select[name="origin"]').value;
+        const destination = document.querySelector('select[name="destination"]').value;
+        
+        if (origin && destination && origin === destination) {
+            e.preventDefault();
+            alert('Origin and destination cannot be the same!');
+        }
+    });
+</script>
+{% endblock %}
+
